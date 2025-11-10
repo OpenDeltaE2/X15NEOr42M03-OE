@@ -12,7 +12,7 @@ PKGV = "${GITPKGVTAG}"
 SRC_URI := "${SRC_ORIGIN} "
 
 DEPENDS = "libusb openssl libdvbcsa openssl-native upx-native pcsc-lite"
-RDEPENDS_${PN} += "enigma2-plugin-extensions-oscamstatus libdvbcsa libusb1"
+RDEPENDS_${PN} += "enigma2-plugin-extensions-oscamstatus libdvbcsa libusb1 libpcsclite1"
 
 LDFLAGS_prepend = "-ludev -ldvbcsa "
 
