@@ -24,8 +24,9 @@ SRC_URI = "http://downloads.openpli.org/archive/xtrend/linux-${PV}-${ARCH}.tar.g
 	file://0001-genet1-1000mbit.patch \
 	file://bcmgenet_phyaddr.patch \
 	file://defconfig \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
+	file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+	file://fix-build-with-binutils-2.41.patch \
+	file://noforce_correct_pointer_usage.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
