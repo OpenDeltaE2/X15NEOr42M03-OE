@@ -1,6 +1,10 @@
 # version
 PR = "r3"
 
+RDEPENS:${PN}:remove = "libnetif-samba4 libcli-ldap-samba4 libdcerpc-pkt-auth-samba4 \
+                        libhttp-samba4 libsmbclient-raw-samba4 libdcerpc0 \
+                        "
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 # Remove acl, cups etc. support.
