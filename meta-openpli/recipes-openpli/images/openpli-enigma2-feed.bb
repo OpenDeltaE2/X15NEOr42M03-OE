@@ -188,6 +188,7 @@ OPTIONAL_ENIGMA2_PACKAGES = " \
 	enigma2-plugin-extensions-automatic-fullbackup \
 	enigma2-plugin-extensions-blurayplayer \
 	enigma2-plugin-extensions-bouquetmakerxtream \
+	enigma2-plugin-extensions-bhtunerserver \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-dlnaserver \
 	enigma2-plugin-extensions-czechmeteo \
@@ -213,10 +214,12 @@ OPTIONAL_ENIGMA2_PACKAGES = " \
 	enigma2-plugin-extensions-refreshbouquet \
 	enigma2-plugin-extensions-sdgradio \
 	enigma2-plugin-extensions-serienrecorder \
+	enigma2-plugin-extensions-simpleumount \
 	enigma2-plugin-extensions-subssupport \
 	enigma2-plugin-extensions-sundtekcontrolcenter \
 	enigma2-plugin-extensions-tmbd \
 	enigma2-plugin-extensions-ts-sateditor \
+	enigma2-plugin-extensions-usbformatwizard \
 	enigma2-plugin-extensions-vavoo \
 	enigma2-plugin-extensions-vcs \
 	enigma2-plugin-extensions-xmodem \
