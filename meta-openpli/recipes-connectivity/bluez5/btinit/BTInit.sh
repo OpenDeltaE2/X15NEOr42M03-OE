@@ -59,6 +59,10 @@ start() {
         log "Bluetooth MAC: $BT_MAC"
     done) &
 
+    # disable aithentication
+    sleep 2
+    hciconfig hci0 noauth > /dev/null 2>&1 && log "Disable authentication for hci0"
+
     if [ -f "$BTAUDIO_FILE" ] && [ -n "$AUDIO_ADDRESS" ]; then
         if [ "$AUDIO_CONNECT" = "True" ]; then
             log "Connecting to audio device: $AUDIO_ADDRESS"
