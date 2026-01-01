@@ -23,7 +23,7 @@ function restartNetwork
 	# restart the services
 	/etc/init.d/dbus-1 reload
 	/etc/init.d/networking start
-	[ -f /etc/init.d/avahi-daemon ] && /etc/init.d/avahi-daemon start
+	hostname -F /etc/hostname
 
 	# wait until we have a network again
 	echo "**** Waiting for network ****"
@@ -35,6 +35,8 @@ function restartNetwork
 		fi
 		sleep 1
 	done
+
+	[ -f /etc/init.d/avahi-daemon ] && /etc/init.d/avahi-daemon start
 
 	# restart the ntp client
 	[ -f /etc/init.d/chronyd ] && /etc/init.d/chronyd reload
