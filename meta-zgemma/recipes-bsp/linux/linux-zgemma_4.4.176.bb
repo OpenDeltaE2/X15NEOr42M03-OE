@@ -39,7 +39,7 @@ KERNEL_IMAGEDEST = "tmp"
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES:${KERNEL_PACKAGE_NAME}-image_h8 = " "
+FILES:${KERNEL_PACKAGE_NAME}-image:h8 = " "
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure:prepend() {
