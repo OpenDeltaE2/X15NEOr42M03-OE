@@ -5,7 +5,7 @@ Subject: [PATCH] [PATCH] remove arc4random implementation
 
 ---
  NEWS                                          |  12 -
- benchtests/Makefile                           |   5 +-
+ benchtests/Makefile                           |   1 -
  benchtests/bench-hash-funcs-kernel.h          |   1 -
  benchtests/bench-hash-funcs.c                 |   2 +
  benchtests/bench-util.h                       |   7 -
@@ -30,7 +30,6 @@ Subject: [PATCH] [PATCH] remove arc4random implementation
  .../powerpc/powerpc64/be/multiarch/Makefile   |   4 +
  .../powerpc64/be/multiarch/chacha20-ppc.c     |   1 +
  .../powerpc64/be/multiarch/chacha20_arch.h    |  42 ++
- sysdeps/powerpc/powerpc64/power8/Makefile     |   5 +
  .../powerpc/powerpc64/power8/chacha20-ppc.c   | 256 ++++++++
  .../powerpc/powerpc64/power8/chacha20_arch.h  |  37 ++
  sysdeps/s390/s390-64/Makefile                 |   6 +
@@ -52,7 +51,6 @@ Subject: [PATCH] [PATCH] remove arc4random implementation
  .../sysv/linux/mips/mips32/nofpu/libc.abilist |   3 -
  .../sysv/linux/mips/mips64/n32/libc.abilist   |   3 -
  .../sysv/linux/mips/mips64/n64/libc.abilist   |   3 -
- sysdeps/unix/sysv/linux/nios2/libc.abilist    |   3 -
  sysdeps/unix/sysv/linux/not-cancel.h          |   3 +
  sysdeps/unix/sysv/linux/or1k/libc.abilist     |   3 -
  .../linux/powerpc/powerpc32/fpu/libc.abilist  |   3 -
@@ -75,7 +73,7 @@ Subject: [PATCH] [PATCH] remove arc4random implementation
  sysdeps/x86_64/chacha20-amd64-avx2.S          | 328 ++++++++++
  sysdeps/x86_64/chacha20-amd64-sse2.S          | 311 ++++++++++
  sysdeps/x86_64/chacha20_arch.h                |  55 ++
- 71 files changed, 2265 insertions(+), 221 deletions(-)
+ 69 files changed, 2259 insertions(+), 215 deletions(-)
  create mode 100644 stdlib/chacha20.c
  create mode 100644 sysdeps/aarch64/chacha20-aarch64.S
  create mode 100644 sysdeps/aarch64/chacha20_arch.h
@@ -92,10 +90,10 @@ Subject: [PATCH] [PATCH] remove arc4random implementation
  create mode 100644 sysdeps/x86_64/chacha20_arch.h
 
 diff --git a/NEWS b/NEWS
-index 1b89f9c010..36bcd4e6fc 100644
+index 69aa600c6d..8b98bdb327 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -530,18 +530,6 @@ Major new features:
+@@ -1251,18 +1251,6 @@ Major new features:
    _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
    is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
  
@@ -115,23 +113,19 @@ index 1b89f9c010..36bcd4e6fc 100644
  
  * Support for prelink will be removed in the next release; this includes
 diff --git a/benchtests/Makefile b/benchtests/Makefile
-index 4fb9bae023..190d508c3a 100644
+index 53f84bfeb9..d82de29ac1 100644
 --- a/benchtests/Makefile
 +++ b/benchtests/Makefile
-@@ -244,10 +244,7 @@ hash-benchset := \
-   nss-hash \
+@@ -293,7 +293,6 @@ hash-benchset := \
    # hash-benchset
  
--stdlib-benchset := \
+ stdlib-benchset := \
 -  arc4random \
--  strtod \
--  # stdlib-benchset
-+stdlib-benchset := strtod
- 
- stdio-common-benchset := sprintf
- 
+   bsearch \
+   random-lock \
+   strtod \
 diff --git a/benchtests/bench-hash-funcs-kernel.h b/benchtests/bench-hash-funcs-kernel.h
-index 7eaa3665b6..72965e4ad2 100644
+index 564279567d..a44bc3b4f7 100644
 --- a/benchtests/bench-hash-funcs-kernel.h
 +++ b/benchtests/bench-hash-funcs-kernel.h
 @@ -17,7 +17,6 @@
@@ -143,7 +137,7 @@ index 7eaa3665b6..72965e4ad2 100644
  /* We go through the trouble of using macros here because many of the
     hash functions are meant to be inlined so its not fair to benchmark
 diff --git a/benchtests/bench-hash-funcs.c b/benchtests/bench-hash-funcs.c
-index 8dd88c9e39..30448d0fe9 100644
+index 3035d5a6ca..58a92164b3 100644
 --- a/benchtests/bench-hash-funcs.c
 +++ b/benchtests/bench-hash-funcs.c
 @@ -38,6 +38,8 @@
@@ -156,7 +150,7 @@ index 8dd88c9e39..30448d0fe9 100644
  {
    NFIXED_ITERS = 1048576,
 diff --git a/benchtests/bench-util.h b/benchtests/bench-util.h
-index 91d9089237..e7a5707206 100644
+index 02180c3887..c883632952 100644
 --- a/benchtests/bench-util.h
 +++ b/benchtests/bench-util.h
 @@ -16,13 +16,6 @@
@@ -174,10 +168,10 @@ index 91d9089237..e7a5707206 100644
  #ifndef START_ITER
  # define START_ITER (100000000)
 diff --git a/include/stdlib.h b/include/stdlib.h
-index 580da9be15..32040816d1 100644
+index b7147ba590..9e98be47b2 100644
 --- a/include/stdlib.h
 +++ b/include/stdlib.h
-@@ -180,15 +180,6 @@ libc_hidden_proto (__ptsname_r)
+@@ -187,15 +187,6 @@ libc_hidden_proto (__ptsname_r)
  libc_hidden_proto (grantpt)
  libc_hidden_proto (unlockpt)
  
@@ -194,10 +188,10 @@ index 580da9be15..32040816d1 100644
  				 char **__restrict __endptr, int __group)
       __THROW __nonnull ((1)) __wur;
 diff --git a/malloc/malloc.c b/malloc/malloc.c
-index bcb6e5b83c..da3d1694b7 100644
+index 5f3e701fd1..539cb323c3 100644
 --- a/malloc/malloc.c
 +++ b/malloc/malloc.c
-@@ -255,7 +255,6 @@
+@@ -258,7 +258,6 @@
  /* For tcache double-free check.  */
  #include <random-bits.h>
  #include <sys/random.h>
@@ -205,17 +199,17 @@ index bcb6e5b83c..da3d1694b7 100644
  
  /*
    Debugging:
-@@ -3140,7 +3139,7 @@ static void
+@@ -3152,7 +3151,7 @@ static void
  tcache_key_initialize (void)
  {
    /* We need to use the _nostatus version here, see BZ 29624.  */
--  if (__getrandom_nocancel_nostatus (&tcache_key, sizeof(tcache_key),
+-  if (__getrandom_nocancel_nostatus_direct (&tcache_key, sizeof(tcache_key),
 +  if (__getrandom (&tcache_key, sizeof(tcache_key),
- 				     GRND_NONBLOCK)
+ 					    GRND_NONBLOCK)
        != sizeof (tcache_key))
-     {
+     tcache_key = 0;
 diff --git a/malloc/thread-freeres.c b/malloc/thread-freeres.c
-index 55ba4e7b83..48bdbb27cf 100644
+index c7ec9f99e9..e8e02dc808 100644
 --- a/malloc/thread-freeres.c
 +++ b/malloc/thread-freeres.c
 @@ -33,7 +33,7 @@ __libc_thread_freeres (void)
@@ -228,10 +222,10 @@ index 55ba4e7b83..48bdbb27cf 100644
  
    /* This should come last because it shuts down malloc for this
 diff --git a/manual/math.texi b/manual/math.texi
-index 2f6ee253b9..087f4146bc 100644
+index fbabf37b48..79eefc3938 100644
 --- a/manual/math.texi
 +++ b/manual/math.texi
-@@ -1447,7 +1447,6 @@ systems.
+@@ -1700,7 +1700,6 @@ systems.
  * ISO Random::                  @code{rand} and friends.
  * BSD Random::                  @code{random} and friends.
  * SVID Random::                 @code{drand48} and friends.
@@ -239,7 +233,7 @@ index 2f6ee253b9..087f4146bc 100644
  @end menu
  
  @node ISO Random
-@@ -1986,44 +1985,6 @@ This function is a GNU extension and should not be used in portable
+@@ -2239,44 +2238,6 @@ This function is a GNU extension and should not be used in portable
  programs.
  @end deftypefun
  
@@ -285,7 +279,7 @@ index 2f6ee253b9..087f4146bc 100644
  @section Is Fast Code or Small Code preferred?
  @cindex Optimization
 diff --git a/nptl/allocatestack.c b/nptl/allocatestack.c
-index f35a8369bd..b461285b57 100644
+index 800ca89720..976973156b 100644
 --- a/nptl/allocatestack.c
 +++ b/nptl/allocatestack.c
 @@ -32,7 +32,6 @@
@@ -303,10 +297,10 @@ index f35a8369bd..b461285b57 100644
 -  memset (&result->tls_state, 0, sizeof result->tls_state);
 +  result->tls_state = (struct tls_internal_t) { 0 };
  
-   /* Clear the DTV.  */
-   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
+   result->getrandom_buf = NULL;
+ 
 diff --git a/stdlib/Makefile b/stdlib/Makefile
-index d587f054d1..78504d3182 100644
+index 25f777e1a5..fed6583baf 100644
 --- a/stdlib/Makefile
 +++ b/stdlib/Makefile
 @@ -55,8 +55,6 @@ routines := \
@@ -318,7 +312,7 @@ index d587f054d1..78504d3182 100644
    at_quick_exit \
    atof \
    atoi \
-@@ -263,9 +261,6 @@ tests := \
+@@ -266,9 +264,6 @@ tests := \
    testrand \
    testsort \
    tst-abs \
@@ -328,7 +322,7 @@ index d587f054d1..78504d3182 100644
    tst-at_quick_exit \
    tst-atexit \
    tst-atof1 \
-@@ -381,8 +376,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+@@ -407,8 +402,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
  LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
  LDLIBS-test-on_exit-race = $(shared-thread-library)
  LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
@@ -338,7 +332,7 @@ index d587f054d1..78504d3182 100644
  
  LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 diff --git a/stdlib/Versions b/stdlib/Versions
-index ea2265bbd4..e8e73145af 100644
+index 6d024000f8..82319dd72b 100644
 --- a/stdlib/Versions
 +++ b/stdlib/Versions
 @@ -136,11 +136,6 @@ libc {
@@ -551,7 +545,7 @@ index 0000000000..2745a81315
 +/* Get the architecture optimized version.  */
 +#include <chacha20_arch.h>
 diff --git a/stdlib/stdlib.h b/stdlib/stdlib.h
-index 414c49d731..7cb7669a16 100644
+index cd4503c761..9c0ebbbe6f 100644
 --- a/stdlib/stdlib.h
 +++ b/stdlib/stdlib.h
 @@ -652,19 +652,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
@@ -575,10 +569,10 @@ index 414c49d731..7cb7669a16 100644
  #endif	/* Use misc or X/Open.  */
  
 diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
-index 141d7d9cc2..44966fbcd8 100644
+index bb97d31355..f00a0cccf1 100644
 --- a/sysdeps/aarch64/Makefile
 +++ b/sysdeps/aarch64/Makefile
-@@ -53,6 +53,10 @@ gen-as-const-headers += \
+@@ -60,6 +60,10 @@ gen-as-const-headers += \
    rtld-global-offsets.sym
  endif
  
@@ -986,7 +980,7 @@ index 0000000000..1b4559ccbc
 +  chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/generic/not-cancel.h b/sysdeps/generic/not-cancel.h
-index 2dd1064600..8e41d630fc 100644
+index 7fa136d4e8..3826749db7 100644
 --- a/sysdeps/generic/not-cancel.h
 +++ b/sysdeps/generic/not-cancel.h
 @@ -20,7 +20,6 @@
@@ -998,7 +992,7 @@ index 2dd1064600..8e41d630fc 100644
  #include <sys/wait.h>
  #include <time.h>
 diff --git a/sysdeps/generic/tls-internal.c b/sysdeps/generic/tls-internal.c
-index 7648f38479..cce09c7471 100644
+index 308eb039c6..f36ef340db 100644
 --- a/sysdeps/generic/tls-internal.c
 +++ b/sysdeps/generic/tls-internal.c
 @@ -16,14 +16,6 @@
@@ -1017,7 +1011,7 @@ index 7648f38479..cce09c7471 100644
 -  free (__tls_internal.strerror_l_buf);
 -}
 diff --git a/sysdeps/generic/tls-internal.h b/sysdeps/generic/tls-internal.h
-index 2ac0992b51..738ce1d2b6 100644
+index 4592565b4c..327e23a9e8 100644
 --- a/sysdeps/generic/tls-internal.h
 +++ b/sysdeps/generic/tls-internal.h
 @@ -30,6 +30,11 @@ __glibc_tls_internal (void)
@@ -1034,10 +1028,10 @@ index 2ac0992b51..738ce1d2b6 100644
  
  #endif
 diff --git a/sysdeps/mach/hurd/i386/libc.abilist b/sysdeps/mach/hurd/i386/libc.abilist
-index 2adf98e71d..e87dc25d8a 100644
+index aac3cb3319..234fd34911 100644
 --- a/sysdeps/mach/hurd/i386/libc.abilist
 +++ b/sysdeps/mach/hurd/i386/libc.abilist
-@@ -2289,9 +2289,6 @@ GLIBC_2.35 __memcmpeq F
+@@ -2382,9 +2382,6 @@ GLIBC_2.35 __memcmpeq F
  GLIBC_2.35 _dl_find_object F
  GLIBC_2.35 close_range F
  GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
@@ -1048,7 +1042,7 @@ index 2adf98e71d..e87dc25d8a 100644
  GLIBC_2.36 mbrtoc8 F
  GLIBC_2.38 __isoc23_fscanf F
 diff --git a/sysdeps/mach/hurd/not-cancel.h b/sysdeps/mach/hurd/not-cancel.h
-index 69fb3c00ef..1de04e7f6e 100644
+index 123cd37b4e..f403591da3 100644
 --- a/sysdeps/mach/hurd/not-cancel.h
 +++ b/sysdeps/mach/hurd/not-cancel.h
 @@ -21,7 +21,6 @@
@@ -1124,19 +1118,6 @@ index 0000000000..08494dc045
 +  else
 +    chacha20_crypt_generic (state, dst, src, bytes);
 +}
-diff --git a/sysdeps/powerpc/powerpc64/power8/Makefile b/sysdeps/powerpc/powerpc64/power8/Makefile
-index 71a59529f3..abb0aa3f11 100644
---- a/sysdeps/powerpc/powerpc64/power8/Makefile
-+++ b/sysdeps/powerpc/powerpc64/power8/Makefile
-@@ -1,3 +1,8 @@
- ifeq ($(subdir),string)
- sysdep_routines += strcasestr-ppc64
- endif
-+
-+ifeq ($(subdir),stdlib)
-+sysdep_routines += chacha20-ppc
-+CFLAGS-chacha20-ppc.c += -mcpu=power8
-+endif
 diff --git a/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c b/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
 new file mode 100644
 index 0000000000..0bbdcb9363
@@ -1443,10 +1424,10 @@ index 0000000000..ded06762b6
 +			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
 +}
 diff --git a/sysdeps/s390/s390-64/Makefile b/sysdeps/s390/s390-64/Makefile
-index 66ed844e68..96c110f490 100644
+index 991025cd2a..4bf36ede6e 100644
 --- a/sysdeps/s390/s390-64/Makefile
 +++ b/sysdeps/s390/s390-64/Makefile
-@@ -67,3 +67,9 @@ tests-container += tst-glibc-hwcaps-cache
+@@ -90,3 +90,9 @@ tests-container += tst-glibc-hwcaps-cache
  endif
  
  endif # $(subdir) == elf
@@ -2087,7 +2068,7 @@ index 0000000000..0c6abf77e8
 +  chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/unix/sysv/linux/aarch64/libc.abilist b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
-index 68eeca1c08..f958dc78e3 100644
+index a22e651432..6146a4f7dc 100644
 --- a/sysdeps/unix/sysv/linux/aarch64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
 @@ -2616,9 +2616,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2101,7 +2082,7 @@ index 68eeca1c08..f958dc78e3 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/alpha/libc.abilist b/sysdeps/unix/sysv/linux/alpha/libc.abilist
-index 34c187b721..d309b38502 100644
+index 4b5736a3b6..ea56050015 100644
 --- a/sysdeps/unix/sysv/linux/alpha/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/alpha/libc.abilist
 @@ -2713,9 +2713,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2115,7 +2096,7 @@ index 34c187b721..d309b38502 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arc/libc.abilist b/sysdeps/unix/sysv/linux/arc/libc.abilist
-index 916c18ea94..4e68879df1 100644
+index b8a44784bd..42c924af1f 100644
 --- a/sysdeps/unix/sysv/linux/arc/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arc/libc.abilist
 @@ -2377,9 +2377,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2129,7 +2110,7 @@ index 916c18ea94..4e68879df1 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arm/be/libc.abilist b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
-index ea95de282a..99231b3575 100644
+index 959e44672f..d5537e2929 100644
 --- a/sysdeps/unix/sysv/linux/arm/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
 @@ -496,9 +496,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2143,7 +2124,7 @@ index ea95de282a..99231b3575 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arm/le/libc.abilist b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
-index 1cdbc983e1..54e8b5f071 100644
+index a930d1a52b..43af6e6acc 100644
 --- a/sysdeps/unix/sysv/linux/arm/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
 @@ -493,9 +493,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2157,7 +2138,7 @@ index 1cdbc983e1..54e8b5f071 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/csky/libc.abilist b/sysdeps/unix/sysv/linux/csky/libc.abilist
-index 96d45961e2..1102ed8abf 100644
+index 6325fc12c4..fcd104732e 100644
 --- a/sysdeps/unix/sysv/linux/csky/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/csky/libc.abilist
 @@ -2652,9 +2652,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2171,7 +2152,7 @@ index 96d45961e2..1102ed8abf 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/hppa/libc.abilist b/sysdeps/unix/sysv/linux/hppa/libc.abilist
-index fbcd60c2b3..d9788800e0 100644
+index 86b3fbdeec..70867835b8 100644
 --- a/sysdeps/unix/sysv/linux/hppa/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/hppa/libc.abilist
 @@ -2601,9 +2601,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2185,7 +2166,7 @@ index fbcd60c2b3..d9788800e0 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/i386/libc.abilist b/sysdeps/unix/sysv/linux/i386/libc.abilist
-index c989b433c0..fe2aed3cab 100644
+index 6555592d86..a495ff2ab6 100644
 --- a/sysdeps/unix/sysv/linux/i386/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/i386/libc.abilist
 @@ -2785,9 +2785,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2199,7 +2180,7 @@ index c989b433c0..fe2aed3cab 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
-index d9bd6a9b56..e1d81a3b5d 100644
+index 7b7b72aa50..c1e57e6e23 100644
 --- a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
 @@ -497,9 +497,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2213,7 +2194,7 @@ index d9bd6a9b56..e1d81a3b5d 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
-index 439796d693..89d4362999 100644
+index df398e43c6..197fa5442e 100644
 --- a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
 @@ -2728,9 +2728,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2227,7 +2208,7 @@ index 439796d693..89d4362999 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
-index 1069d3252c..ec9c2916dc 100644
+index ca8df6f4b0..e26c47dddd 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
 @@ -2701,9 +2701,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2241,7 +2222,7 @@ index 1069d3252c..ec9c2916dc 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
-index 17abe08c8b..c18e7f832c 100644
+index 9508154847..238c5d77a9 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
 @@ -2698,9 +2698,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2255,7 +2236,7 @@ index 17abe08c8b..c18e7f832c 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
-index 799e508950..30bf7fd8e3 100644
+index 4d51cc428f..d717515827 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
 @@ -2693,9 +2693,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2269,7 +2250,7 @@ index 799e508950..30bf7fd8e3 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
-index 1c10996cbc..2226f0785d 100644
+index 7f90fadc76..6cb5c524e1 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
 @@ -2691,9 +2691,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2283,7 +2264,7 @@ index 1c10996cbc..2226f0785d 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
-index 03d9655f26..ca698477cd 100644
+index fc366d1bd0..f601a563f2 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
 @@ -2699,9 +2699,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2297,7 +2278,7 @@ index 03d9655f26..ca698477cd 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
-index 05e402ed30..d56aeb158f 100644
+index debd5c37c9..dcc2607a3f 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
 @@ -2602,9 +2602,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2310,25 +2291,11 @@ index 05e402ed30..d56aeb158f 100644
  GLIBC_2.36 c8rtomb F
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
-diff --git a/sysdeps/unix/sysv/linux/nios2/libc.abilist b/sysdeps/unix/sysv/linux/nios2/libc.abilist
-index 3aa81766aa..677eea3402 100644
---- a/sysdeps/unix/sysv/linux/nios2/libc.abilist
-+++ b/sysdeps/unix/sysv/linux/nios2/libc.abilist
-@@ -2740,9 +2740,6 @@ GLIBC_2.35 __memcmpeq F
- GLIBC_2.35 _dl_find_object F
- GLIBC_2.35 epoll_pwait2 F
- GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
--GLIBC_2.36 arc4random F
--GLIBC_2.36 arc4random_buf F
--GLIBC_2.36 arc4random_uniform F
- GLIBC_2.36 c8rtomb F
- GLIBC_2.36 fsconfig F
- GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/not-cancel.h b/sysdeps/unix/sysv/linux/not-cancel.h
-index 2a7585b73f..13d6eae420 100644
+index 5ac6dd4c71..2cc059aae1 100644
 --- a/sysdeps/unix/sysv/linux/not-cancel.h
 +++ b/sysdeps/unix/sysv/linux/not-cancel.h
-@@ -103,4 +103,7 @@ __poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+@@ -102,4 +102,7 @@ __poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
    return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
  }
  
@@ -2337,7 +2304,7 @@ index 2a7585b73f..13d6eae420 100644
 +
  #endif /* NOT_CANCEL_H  */
 diff --git a/sysdeps/unix/sysv/linux/or1k/libc.abilist b/sysdeps/unix/sysv/linux/or1k/libc.abilist
-index c40c843aaf..9efc6ead43 100644
+index b62d59f1af..58ba11a7bb 100644
 --- a/sysdeps/unix/sysv/linux/or1k/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/or1k/libc.abilist
 @@ -2123,9 +2123,6 @@ GLIBC_2.35 wprintf F
@@ -2351,7 +2318,7 @@ index c40c843aaf..9efc6ead43 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
-index 9714305608..65fab47772 100644
+index 883e66f3ae..e23d6aa82b 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
 @@ -2755,9 +2755,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2365,7 +2332,7 @@ index 9714305608..65fab47772 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
-index 0beb52c542..bba9fb9948 100644
+index 84cd9e0e18..6ae0c2f4d0 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
 @@ -2788,9 +2788,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2379,7 +2346,7 @@ index 0beb52c542..bba9fb9948 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
-index cfc2ebd3ec..713fc8863f 100644
+index 8832568ab3..24a584c95f 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
 @@ -2510,9 +2510,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2393,7 +2360,7 @@ index cfc2ebd3ec..713fc8863f 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
-index 8c9efc5a16..0582ad986e 100644
+index b6ff8016e4..4a07af3fcc 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
 @@ -2812,9 +2812,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2407,7 +2374,7 @@ index 8c9efc5a16..0582ad986e 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
-index f90c94bc35..df61233be0 100644
+index 1771a2370c..7014cf0d3e 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 @@ -2379,9 +2379,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2421,7 +2388,7 @@ index f90c94bc35..df61233be0 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
-index e04ff93bd2..f87ef93139 100644
+index 4b48352fd9..266458247a 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 @@ -2579,9 +2579,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2435,7 +2402,7 @@ index e04ff93bd2..f87ef93139 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
-index a7467e2850..1917f0a4c5 100644
+index f0decc787b..8243416e25 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
 @@ -2753,9 +2753,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2449,7 +2416,7 @@ index a7467e2850..1917f0a4c5 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
-index fd1cb2972d..866bf7ebff 100644
+index da8a2bfb74..33a79b8023 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
 @@ -2547,9 +2547,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2463,7 +2430,7 @@ index fd1cb2972d..866bf7ebff 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sh/be/libc.abilist b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
-index ff6e6b1a13..1d8d585227 100644
+index fb30341894..e6a3489475 100644
 --- a/sysdeps/unix/sysv/linux/sh/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
 @@ -2608,9 +2608,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2477,7 +2444,7 @@ index ff6e6b1a13..1d8d585227 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sh/le/libc.abilist b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
-index 449d92bbc5..d0d512c988 100644
+index d716673432..1afdce52f9 100644
 --- a/sysdeps/unix/sysv/linux/sh/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
 @@ -2605,9 +2605,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2491,7 +2458,7 @@ index 449d92bbc5..d0d512c988 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
-index e615be759a..d61a897544 100644
+index 6deedf216d..b2905de09d 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
 @@ -2748,9 +2748,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2505,7 +2472,7 @@ index e615be759a..d61a897544 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
-index bd36431dd7..cd00ee43c1 100644
+index 1ce22bf036..783f682290 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
 @@ -2574,9 +2574,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2519,7 +2486,7 @@ index bd36431dd7..cd00ee43c1 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/tls-internal.c b/sysdeps/unix/sysv/linux/tls-internal.c
-index 81ebcdfbf8..9b6e7d1466 100644
+index acbfe0674e..5ee5122df9 100644
 --- a/sysdeps/unix/sysv/linux/tls-internal.c
 +++ b/sysdeps/unix/sysv/linux/tls-internal.c
 @@ -16,13 +16,6 @@
@@ -2538,7 +2505,7 @@ index 81ebcdfbf8..9b6e7d1466 100644
 -  free (self->tls_state.strerror_l_buf);
 -}
 diff --git a/sysdeps/unix/sysv/linux/tls-internal.h b/sysdeps/unix/sysv/linux/tls-internal.h
-index 8cb0d8ab68..03af7de9ac 100644
+index 5b84fddfcf..9cc7c9e6cc 100644
 --- a/sysdeps/unix/sysv/linux/tls-internal.h
 +++ b/sysdeps/unix/sysv/linux/tls-internal.h
 @@ -28,6 +28,11 @@ __glibc_tls_internal (void)
@@ -2555,7 +2522,7 @@ index 8cb0d8ab68..03af7de9ac 100644
  
  #endif
 diff --git a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
-index aea7848ed6..fb209cb626 100644
+index 564877250b..a05b2a74cd 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
 @@ -2525,9 +2525,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2569,7 +2536,7 @@ index aea7848ed6..fb209cb626 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
-index 4ab3681914..e1764996d6 100644
+index 25a39d0943..9644c16bb9 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
 @@ -2631,9 +2631,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2583,7 +2550,7 @@ index 4ab3681914..e1764996d6 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
-index 90f4ecfd26..29334a500a 100644
+index fe9f1cdddb..8775d8f315 100644
 --- a/sysdeps/x86_64/Makefile
 +++ b/sysdeps/x86_64/Makefile
 @@ -13,6 +13,13 @@ ifeq ($(subdir),csu)
@@ -3313,5 +3280,5 @@ index 0000000000..6f3784e392
 +#endif
 +}
 -- 
-2.43.0.windows.1
+2.48.1
 
