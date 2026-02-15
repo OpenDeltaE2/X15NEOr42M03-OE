@@ -101,3 +101,5 @@ EXTRA_OECONF = "\
 	"
 
 FILES:${PN} = "${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/"
+
+ERROR_QA:remove = "buildpaths"
