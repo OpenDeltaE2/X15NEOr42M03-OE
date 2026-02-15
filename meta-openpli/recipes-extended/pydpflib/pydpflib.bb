@@ -8,6 +8,7 @@ SRC_URI = "git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers;protocol=ht
            file://replace-py-ty-with-py--set-type.patch \
            file://set-python-version-to-312.patch \
            file://fix-incompatible-pointer-type.patch \
+           file://migrate-to-new-buffer-protocol.patch \
 "
 
 inherit pkgconfig gitpkgv python3native
