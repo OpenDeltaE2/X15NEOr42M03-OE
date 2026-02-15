@@ -4,8 +4,6 @@ MAINTAINER = "OpenPLi team <info@openpli.org>"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-PACKAGE_ARCH = "all"
-
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!pli-).*"
 
 # This prevents QA warnings because bitbake cannot see the dependencies
@@ -30,15 +28,6 @@ PROVIDES += "\
 "
 
 inherit gitpkgv pkgconfig gettext python3targetconfig autotools-brokensep
-
-# needed to prevent autotools from running C compiler checks, which
-# fails in allarch (as there is no cross compiler for this ARCH !!
-CC = ""
-CFLAGS = ""
-CPP = ""
-CPPFLAGS = ""
-CXX = ""
-CXXFLAGS = ""
 
 PV = "git"
 PKGV = "git${GITPKGV}"
