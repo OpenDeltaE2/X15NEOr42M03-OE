@@ -15,6 +15,7 @@ DEPENDS = "openssl"
 SRC_URI = " \
     git://github.com/oe-alliance/ofgwrite.git;protocol=https;branch=master \
     file://0001-makefile-openssl.patch \
+    file://bool-is-a-keyword.patch \
     "
 
 do_install() {
