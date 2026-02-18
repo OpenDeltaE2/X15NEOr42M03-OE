@@ -16,8 +16,6 @@ DEPENDS = "bitstream libev"
 SRC_ORIGIN ?= "git://github.com/videolan/dvblast.git;protocol=https;branch=master"
 SRC_URI := "${SRC_ORIGIN} "
 
-inherit autotools-brokensep
-
 do_compile:prepend() {
         sed -i 's#/usr/local#/usr#' ${S}/Makefile
 }

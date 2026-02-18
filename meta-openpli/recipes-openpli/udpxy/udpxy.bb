@@ -10,7 +10,7 @@ inherit gitpkgv
 PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 
-inherit autotools-brokensep pkgconfig
+inherit pkgconfig
 
 SRC_URI = "git://github.com/pcherenkov/udpxy.git;branch=master;protocol=https \
 	 file://udpxy.sh"

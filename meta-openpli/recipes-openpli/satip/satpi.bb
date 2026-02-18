@@ -19,7 +19,7 @@ CXXFLAGS = " -std=c++11"
 
 EXTRA_OECONF = "LIBDVBCSA=yes ENIGMA=yes debug "
 
-inherit autotools-brokensep update-rc.d
+inherit update-rc.d
 
 INITSCRIPT_NAME = "satpi"
 

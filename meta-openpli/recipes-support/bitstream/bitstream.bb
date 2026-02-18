@@ -15,7 +15,7 @@ PKGV = "${GITPKGVTAG}"
 SRC_ORIGIN ?= "git://github.com/videolan/bitstream.git;protocol=https;branch=master"
 SRC_URI := "${SRC_ORIGIN} "
 
-inherit autotools-brokensep pkgconfig
+inherit pkgconfig
 
 do_compile:prepend() {
 	sed -i 's#/usr/local#/usr#' ${S}/Makefile

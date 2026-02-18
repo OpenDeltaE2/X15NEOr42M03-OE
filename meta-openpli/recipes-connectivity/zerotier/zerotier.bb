@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main 
 	"
 SRCREV = "c6d5dc1534c510099f9e8ed1e7be0bb3602784bc"
 
-inherit update-rc.d systemd gitpkgv autotools-brokensep gittag
+inherit update-rc.d systemd gitpkgv gittag
 
 INITSCRIPT_NAME = "zerotier"
 
