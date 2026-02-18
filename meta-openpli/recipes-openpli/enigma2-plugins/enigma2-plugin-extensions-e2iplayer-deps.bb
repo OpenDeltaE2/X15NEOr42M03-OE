@@ -4,6 +4,7 @@ inherit allarch python3-compileall
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
+	exteplayer3 \
 	ffmpeg \
 	gstplayer \
 	wget \

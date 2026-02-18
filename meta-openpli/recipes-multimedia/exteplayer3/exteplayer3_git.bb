@@ -12,7 +12,7 @@ inherit gitpkgv
 PV = "68+gitr"
 PKGV = "68+gitr${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https"
+SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https file://port-to-ffmpeg7.patch"
 
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"

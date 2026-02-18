@@ -75,6 +75,7 @@ OPTIONAL_PACKAGES += " \
 	edid-decode \
 	evtest \
 	exfatprogs \
+	exteplayer3 \
 	gdb \
 	gerbera \
 	grep \
