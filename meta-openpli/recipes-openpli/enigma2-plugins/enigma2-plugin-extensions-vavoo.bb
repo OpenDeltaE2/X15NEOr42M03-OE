@@ -6,7 +6,7 @@ LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS:${PN} = "ffmpeg gstplayer exteplayer3 enigma2-plugin-systemplugins-serviceapp"
+RDEPENDS:${PN} = "ffmpeg gstplayer enigma2-plugin-systemplugins-serviceapp"
 
 inherit allarch gitpkgv python3-compileall
 
