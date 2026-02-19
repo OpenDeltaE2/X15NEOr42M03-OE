@@ -13,7 +13,7 @@ MACHINE_KERNEL_PR:append = ".1"
 SRC_URI[md5sum] = "8b67a95176111385270ed3276436193a"
 SRC_URI[sha256sum] = "571438a1c94f5a72903b310682a344757cbf97028e1e5dfbe980472f04a4e9a2"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/xtrend/xtrend-linux-4.4.8-20160504.tar.xz \
 	file://defconfig \
@@ -31,7 +31,7 @@ SRC_URI += "http://downloads.openpli.org/archive/xtrend/xtrend-linux-4.4.8-20160
 	file://fix-build-with-binutils-2.41.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

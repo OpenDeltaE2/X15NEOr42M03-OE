@@ -21,7 +21,7 @@ SRC_URI = "http://downloads.openpli.org/archive/vuplus/vuplus-blindscan-utils-${
 SRC_URI[md5sum] = "b6d485516762453dcb829d914b4e06b3"
 SRC_URI[sha256sum] = "cb7045db4aee0d1ef9392231d2bfc7f843e9e9ec82ceb17d86dd7c1fe56bef4b"
 
-S = "${WORKDIR}/blindscan-utils"
+S = "${UNPACKDIR}/blindscan-utils"
 
 PLUGABLE_MODEL_BLINDSCAN = "\
         tda1002x \

@@ -20,11 +20,11 @@ SRC_URI += "\
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
 	for f in *.ko; do
-		install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}/extra/$f;
+		install -m 0644 ${UNPACKDIR}/$f ${D}/lib/modules/${KV}/extra/$f;
 	done
-	if [ -f ${WORKDIR}/${INITSCRIPT_NAME}.sysvinit ]; then
+	if [ -f ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ]; then
 		install -d ${D}${INIT_D_DIR}
-		install -m 0755 ${WORKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
+		install -m 0755 ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 	fi
 }
 

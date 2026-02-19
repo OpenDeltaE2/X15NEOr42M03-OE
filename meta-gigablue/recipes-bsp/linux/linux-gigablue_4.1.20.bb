@@ -61,8 +61,8 @@ SRC_URI += "http://downloads.openpli.org/archive/gigablue/gigablue-linux-${PV}-$
     file://kernel-add-support-for-gcc13.patch \
 "
 
-S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-${PV}"
+B = "${UNPACKDIR}/build"
 
 export OS = "Linux"
 KERNEL_IMAGETYPE = "zImage"
@@ -74,16 +74,16 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAG
 
 kernel_do_configure:prepend() {
         install -d ${B}/usr
-        install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
-        if [ -e ${WORKDIR}/defconfig_initrd ]; then
-            mv ${WORKDIR}/defconfig_initrd ${WORKDIR}/defconfig
+        install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+        if [ -e ${UNPACKDIR}/defconfig_initrd ]; then
+            mv ${UNPACKDIR}/defconfig_initrd ${WORKDIR}/defconfig
         fi
 }
 
 kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/gbfindkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${UNPACKDIR}/gbfindkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_compile() {

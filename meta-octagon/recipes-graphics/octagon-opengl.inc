@@ -11,7 +11,7 @@ RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGL
 
 SRC_URI = "http://downloads.openpli.org/archive/octagon/${SOC_FAMILY}-opengl-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 # The driver is a set of binary libraries to install
 # there's nothing to configure or compile

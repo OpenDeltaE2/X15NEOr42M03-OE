@@ -8,7 +8,7 @@ DEPENDS = "ncurses"
 
 SRC_URI += "file://blindscan-utils_1.12_mips32el.tar.xz"
 
-S = "${WORKDIR}/blindscan-utils_${PV}_${TUNE_PKGARCH}"
+S = "${UNPACKDIR}/blindscan-utils_${PV}_${TUNE_PKGARCH}"
 
 PACKAGES = "${PN}"
 

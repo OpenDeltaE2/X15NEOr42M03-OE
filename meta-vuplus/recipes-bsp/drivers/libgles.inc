@@ -8,7 +8,7 @@ RPROVIDES:${PN} = "libEGL.so libGLESv2.so libdvb_base.so libdvb_client.so libnxp
 PV = "15.1"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-S = "${WORKDIR}/libgles-${MACHINE}"
+S = "${UNPACKDIR}/libgles-${MACHINE}"
 
 # Closed source
 SRC_URI = "http://downloads.openpli.org/archive/vuplus/libgles-${MACHINE}-${PV}-${PR}.tar.gz"

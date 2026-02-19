@@ -9,7 +9,7 @@ MACHINE_KERNEL_PR:append = ".0"
 SRC_URI[md5sum] = "ae1c7b3d80d1b17aeb9646822ac724d4"
 SRC_URI[sha256sum] = "1abef66b7df201bf91aa26e2289dbe7104fa66cfd00dc2c5cb7c38b747d96d31"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
@@ -29,7 +29,7 @@ SRC_URI += "http://downloads.openpli.org/archive/formuler/linux-${PV}-${ARCH}.ta
 
 inherit kernel machine_kernel_pr
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

@@ -14,7 +14,7 @@ SRC_URI = " \
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/vuplus-bluetooth-util:"
 
-S = "${WORKDIR}/vuplus-bluetooth-util-${MACHINE}"
+S = "${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}"
 
 do_install() {
 	install -d ${D}${bindir}

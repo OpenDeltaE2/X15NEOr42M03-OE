@@ -14,7 +14,7 @@ RDEPENDS:${PN} = "libvupl-${MACHINE} libgles-${MACHINE}"
 
 SRC_URI = "http://code.vuplus.com/download/release/support/${BPN}-${PV}.${PR}.tar.gz"
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 EXTRA_OECMAKE += "-DVUPLUS=1"
 
@@ -28,7 +28,7 @@ do_configure:prepend() {
 
 do_install() {
 	install -d ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
+	install -m 0755 ${UNPACKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
 }
 
 SRC_URI[md5sum] = "a904074c39b7d37293e1ff2cfe990b77"

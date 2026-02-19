@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "http://downloads.openpli.org/archive/gigablue/xbmc-support_gb7252_${GLPR}.tar.gz"
 
-S = "${WORKDIR}/xbmc-support"
+S = "${UNPACKDIR}/xbmc-support"
 
 do_install(){
     install -d ${D}${includedir}

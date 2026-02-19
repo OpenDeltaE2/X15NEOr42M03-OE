@@ -12,7 +12,7 @@ SRC_URI += "\
 "
 
 do_install:append() {
-	install -m 0755 ${WORKDIR}/bp3flash.py ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/bp3flash.py ${D}${bindir}
 }
 
 SRC_URI[md5sum] = "f8f1aa29d4c89c5ec02f99ab3a0ce198"

@@ -19,7 +19,7 @@ RDEPENDS:${PN} = "chromium-browser"
 
 do_install:append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/Chromium
-    cp -aRf --no-preserve=ownership ${WORKDIR}/e2plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/Chromium/
+    cp -aRf --no-preserve=ownership ${UNPACKDIR}/e2plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/Chromium/
 }
 
 do_package_qa() {

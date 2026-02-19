@@ -16,8 +16,8 @@ do_configure[nostamp] = "1"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}
 }
 
 addtask deploy before do_build after do_install

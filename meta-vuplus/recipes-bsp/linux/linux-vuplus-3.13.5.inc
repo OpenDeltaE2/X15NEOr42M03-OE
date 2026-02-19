@@ -9,7 +9,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/linux-vuplus-${KV}:"
 
@@ -34,7 +34,7 @@ SRC_URI += "http://downloads.openpli.org/archive/vuplus/stblinux-${KV}.tar.bz2 \
 	file://defconfig \
 	"
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 
 export OS = "Linux"
 KERNEL_IMAGETYPE = "vmlinux"
@@ -50,7 +50,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.g
 
 do_configure:prepend() {
 	if ${@bb.utils.contains("MACHINE_FEATURES", 'dvbproxy', 'true', 'false', d)}; then
-		sed -i "s/bmem=220M@512M/bmem=384M@512M/g" ${WORKDIR}/defconfig
+		sed -i "s/bmem=220M@512M/bmem=384M@512M/g" ${UNPACKDIR}/defconfig
 	fi
 }
 

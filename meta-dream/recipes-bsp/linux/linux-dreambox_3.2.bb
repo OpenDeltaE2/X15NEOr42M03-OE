@@ -56,4 +56,4 @@ SRC_URI[unionfs.sha256sum] = "c0c449a445e9e07c5b1ba8e8c40013c0e40a5948c30a719067
 
 require linux-dreambox.inc
 
-S = "${WORKDIR}/linux-3.2"
+S = "${UNPACKDIR}/linux-3.2"

@@ -9,7 +9,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "53d1614e476bc1141b35266cb31ba091"
 SRC_URI[sha256sum] = "385d8efec92b5d3bc8e16c37673e4a2a38a6541b684311650040aa5d67508c3e"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/miraclebox/ceryon-linux-${PV}.tgz \
 	file://defconfig \
@@ -27,8 +27,8 @@ SRC_URI += "http://downloads.openpli.org/archive/miraclebox/ceryon-linux-${PV}.t
 	file://kernel-add-support-for-gcc13.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-${PV}"
+B = "${UNPACKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

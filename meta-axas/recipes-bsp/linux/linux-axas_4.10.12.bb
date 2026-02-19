@@ -12,7 +12,7 @@ MACHINE_KERNEL_PR:append = ".1"
 SRC_URI[arm.md5sum] = "bda1c09ed92a805cedc6770c0dd40e81"
 SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5ea6964674a"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/axas/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
 	file://defconfig \
@@ -29,7 +29,7 @@ SRC_URI:append:arm = " \
 	file://noforce_correct_pointer_usage.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -44,13 +44,13 @@ FILES:${KERNEL_PACKAGE_NAME}-image:arm = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYP
 
 kernel_do_configure:prepend:arm() {
 	install -d ${B}/usr
-	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
 kernel_do_install:append:arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${UNPACKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image:arm() {

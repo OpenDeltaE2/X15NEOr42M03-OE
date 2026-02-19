@@ -14,7 +14,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
-S = "${WORKDIR}/libv3d"
+S = "${UNPACKDIR}/libv3d"
 
 LIBV3DARCH ?= ""
 LIBV3DARCH:arm = "arm-linux-gnueabihf"

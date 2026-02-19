@@ -55,13 +55,13 @@ SRC_URI = "file://media_build-bst-${SRCDATE}.tar.gz \
            file://sit2_op.o_${SRCDATE_BIN}_arm \
 "
 
-S = "${WORKDIR}/media_build-bst-${SRCDATE}"
+S = "${UNPACKDIR}/media_build-bst-${SRCDATE}"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
 
 do_configure:prepend() {
 	CUR=`pwd`
-	cp ${WORKDIR}/sit2_op.o_${SRCDATE_BIN}_arm ${S}/v4l/sit2_op.o
+	cp ${UNPACKDIR}/sit2_op.o_${SRCDATE_BIN}_arm ${S}/v4l/sit2_op.o
 	tar -xzf ${S}/dvbsky-firmware.tar.gz
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
@@ -69,7 +69,7 @@ do_configure:prepend() {
 }
 
 do_configure() {
-	install -m 0644 ${WORKDIR}/defconfig ${S}/v4l/.config
+	install -m 0644 ${UNPACKDIR}/defconfig ${S}/v4l/.config
 }
 
 do_compile() {

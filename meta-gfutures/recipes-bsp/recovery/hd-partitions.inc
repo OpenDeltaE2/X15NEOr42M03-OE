@@ -16,12 +16,12 @@ do_configure[nostamp] = "1"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/fastboot.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/pq_param.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/baseparam.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/logo.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/dtbo.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/fastboot.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/pq_param.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/baseparam.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/logo.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/dtbo.img ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
 }
 
 addtask deploy before do_build after do_install

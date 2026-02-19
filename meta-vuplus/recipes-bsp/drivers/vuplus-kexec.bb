@@ -13,8 +13,8 @@ SRC_URI = " \
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
-	install -m 0755 ${WORKDIR}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
+	install -m 0755 ${UNPACKDIR}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
+	install -m 0755 ${UNPACKDIR}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

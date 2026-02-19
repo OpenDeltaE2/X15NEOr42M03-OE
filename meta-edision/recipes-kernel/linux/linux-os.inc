@@ -16,8 +16,8 @@ inherit kernel
 
 export OS = "Linux"
 
-S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-${PV}"
+B = "${UNPACKDIR}/build"
 
 KERNEL_IMAGEDEST = "tmp"
 

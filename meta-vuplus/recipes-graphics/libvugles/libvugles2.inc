@@ -17,7 +17,7 @@ SRC_URI:vuduo2 = "https://source.mynonpublic.com/vuplus/release/libvugles2/libvu
 SRC_URI:vusolo2 = "https://source.mynonpublic.com/vuplus/release/libvugles2/libvugles2-${PV}-${PR}.tar.gz"
 SRC_URI:vusolose = "https://source.mynonpublic.com/vuplus/release/libvugles2/libvugles2-${PV}-${PR}.tar.gz"
 
-S = "${WORKDIR}/libvugles2-${PV}"
+S = "${UNPACKDIR}/libvugles2-${PV}"
 
 inherit pkgconfig
 

@@ -22,6 +22,6 @@ do_compile() {
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
 	install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra
+    install -m 0755 ${UNPACKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra
     echo dvb >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }

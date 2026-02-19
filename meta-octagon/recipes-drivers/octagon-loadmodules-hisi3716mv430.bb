@@ -21,5 +21,5 @@ do_compile() {
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/octagon-loadmodules-hisi3716mv430.sh ${D}/etc/init.d/octagon-loadmodules
+    install -m 0755 ${UNPACKDIR}/octagon-loadmodules-hisi3716mv430.sh ${D}/etc/init.d/octagon-loadmodules
 }

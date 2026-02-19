@@ -20,7 +20,7 @@ INSANE_SKIP += "file-rdeps"
 
 ALLOW_EMPTY:${PN} = "1"
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 do_install() {
 	install -d ${D}/usr

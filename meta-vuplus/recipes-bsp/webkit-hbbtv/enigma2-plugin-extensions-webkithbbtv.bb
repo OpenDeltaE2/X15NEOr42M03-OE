@@ -16,8 +16,8 @@ do_install:append() {
     install -d ${D}/usr/bin
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV
 
-    install -m 0755 ${WORKDIR}/webkit-hbbtv-plugin/run-webkit.sh ${D}/usr/bin
-    cp -aRf --no-preserve=ownership ${WORKDIR}/webkit-hbbtv-plugin/WebkitHbbTV/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/
+    install -m 0755 ${UNPACKDIR}/webkit-hbbtv-plugin/run-webkit.sh ${D}/usr/bin
+    cp -aRf --no-preserve=ownership ${UNPACKDIR}/webkit-hbbtv-plugin/WebkitHbbTV/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/
 }
 
 do_package_qa() {

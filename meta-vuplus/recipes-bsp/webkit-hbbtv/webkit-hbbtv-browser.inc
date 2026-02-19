@@ -15,9 +15,9 @@ do_install:append() {
 	install -d ${D}/usr/lib/mozilla/plugins
 	install -d ${D}/home/root
 
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/none.html ${D}/home/root
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/browser ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/none.html ${D}/home/root
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/browser ${D}/usr/bin
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
 
 	# patch browser for libudev.so.1
 	sed -i 's/libudev.so.0/libudev.so.1/g' ${D}/usr/bin/browser

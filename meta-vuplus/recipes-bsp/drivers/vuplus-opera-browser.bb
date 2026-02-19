@@ -17,7 +17,7 @@ SRC_FILE = "opera-hbbtv_${SRC_DATE}.tar.gz"
 SRC_URI[md5sum] = "aa99fb26e817f8fa49df9c1cd1fcb9fe"
 SRC_URI[sha256sum] = "d85ed5b797cb963b219c7e594d1a57361220e90d7fa7269bb84f2d0e6ef13b3e"
 
-S = "${WORKDIR}/opera-hbbtv"
+S = "${UNPACKDIR}/opera-hbbtv"
 
 do_fetch() {
        if [ ! -e ${DL_DIR}/${SRC_FILE} -a -e /etc/vuplus_browser.pwd ]; then
@@ -26,7 +26,7 @@ get ${SRC_FILE}
 bye
 +
        fi
-       cp -av --no-preserve=ownership ${DL_DIR}/${SRC_FILE} ${WORKDIR}/
+       cp -av --no-preserve=ownership ${DL_DIR}/${SRC_FILE} ${UNPACKDIR}/
 }
 
 do_unpack() {

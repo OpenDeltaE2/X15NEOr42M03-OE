@@ -11,7 +11,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
 SRC_URI[mips.sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc02562bc"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/xp/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
 	file://defconfig \
@@ -21,7 +21,7 @@ SRC_URI += "http://downloads.openpli.org/archive/xp/linux-${PV}-${ARCH}.tar.gz;n
 	file://noforce_correct_pointer_usage.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

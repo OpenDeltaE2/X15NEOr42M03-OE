@@ -12,7 +12,7 @@ ALLOW_EMPTY:${PN} = "1"
 
 do_install() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/gpt.bin ${D}/usr/share/gpt.bin
+    install -m 0644 ${UNPACKDIR}/gpt.bin ${D}/usr/share/gpt.bin
 }
 
 FILES:${PN} = "/usr/share"

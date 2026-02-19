@@ -33,13 +33,13 @@ IMAGE_CMD:hdemmc () {
     parted -s ${EMMC_IMAGE} unit KiB mkpart kernel1 ${KERNEL_PARTITION_OFFSET} $(expr ${KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart rootfs1 ext2 ${ROOTFS_PARTITION_OFFSET} $(expr ${ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart storage ext2 ${STORAGE_PARTITION_OFFSET} $(expr ${EMMC_IMAGE_SIZE} \- 1024)
-    dd if=/dev/zero of=${WORKDIR}/boot.img bs=1024 count=${BOOT_PARTITION_SIZE}
-    mkfs.msdos -S 512 ${WORKDIR}/boot.img
-    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP
-    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_1
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
-    dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=1024 seek=${BOOT_PARTITION_OFFSET}
+    dd if=/dev/zero of=${UNPACKDIR}/boot.img bs=1024 count=${BOOT_PARTITION_SIZE}
+    mkfs.msdos -S 512 ${UNPACKDIR}/boot.img
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${UNPACKDIR}/STARTUP
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=1'" > ${UNPACKDIR}/STARTUP_1
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP ::
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP_1 ::
+    dd conv=notrunc if=${UNPACKDIR}/boot.img of=${EMMC_IMAGE} bs=1024 seek=${BOOT_PARTITION_OFFSET}
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=1024 seek=${KERNEL_PARTITION_OFFSET}
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 of=${EMMC_IMAGE} bs=1024 seek=${ROOTFS_PARTITION_OFFSET}
 }

@@ -21,5 +21,5 @@ do_compile() {
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/gigablue-loadmodules-gbtrio4k.sh ${D}/etc/init.d/gigablue-loadmodules
+    install -m 0755 ${UNPACKDIR}/gigablue-loadmodules-gbtrio4k.sh ${D}/etc/init.d/gigablue-loadmodules
 }

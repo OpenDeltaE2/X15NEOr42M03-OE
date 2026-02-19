@@ -40,7 +40,7 @@ UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 EXTRA_IMAGECMD_COMPAT = " --eraseblock=0x20000 -n -l --pagesize=0x800 "
 
-UBI_IMAGEDIR = "${WORKDIR}/deploy-${PN}-image-complete"
+UBI_IMAGEDIR = "${UNPACKDIR}/deploy-${PN}-image-complete"
 
 IMAGE_CMD:ubifs:prepend = " \
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \

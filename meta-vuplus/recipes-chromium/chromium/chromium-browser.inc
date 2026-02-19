@@ -15,7 +15,7 @@ RDEPENDS:${PN} = "libcrypto-compat nspr nss libxslt libudev libcurl"
 
 do_install() {
 	install -d ${D}/usr/local/chromium
-	cp -afR --no-preserve=ownership ${WORKDIR}/chromium/* ${D}/usr/local/chromium/
+	cp -afR --no-preserve=ownership ${UNPACKDIR}/chromium/* ${D}/usr/local/chromium/
 	chmod 755 ${D}/usr/local/chromium/run.sh
 	chmod 755 ${D}/usr/local/chromium/bin/browser_shell
 	chmod 755 ${D}/usr/local/chromium/bin/chrome

@@ -16,8 +16,8 @@ do_configure[nostamp] = "1"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${UNPACKDIR}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}
+    install -m 0755 ${UNPACKDIR}/${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/hd-partitions-${MACHINE}/${MACHINE}
 }
 
 addtask deploy before do_build after do_install

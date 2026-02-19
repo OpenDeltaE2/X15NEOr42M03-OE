@@ -25,7 +25,7 @@ SRC_URI = " \
     file://${MACHINE}/_vubt.so \
 "
 
-S = "${WORKDIR}/plugin"
+S = "${UNPACKDIR}/plugin"
 
 BLUETOOTH_PLUGIN_PATH = "/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup"
 
@@ -39,7 +39,7 @@ do_compile() {
 do_install() {
 	install -d  ${D}${BLUETOOTH_PLUGIN_PATH}
 	cp -r --preserve=mode,links ${S}/* ${D}${BLUETOOTH_PLUGIN_PATH}
-	cp ${WORKDIR}/${MACHINE}/_vubt.so ${D}${BLUETOOTH_PLUGIN_PATH}
+	cp ${UNPACKDIR}/${MACHINE}/_vubt.so ${D}${BLUETOOTH_PLUGIN_PATH}
 }
 
 INSANE_SKIP:${PN} = "already-stripped file-rdeps"

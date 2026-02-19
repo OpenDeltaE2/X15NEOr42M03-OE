@@ -88,7 +88,7 @@ do_configure:append() {
 do_install:append() {
         rmdir ${D}${libexecdir}
         install -d ${D}/usr/bin
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
+        install -m 0755 ${UNPACKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
 }
 
 PACKAGES =+ "${PN}-webinspector ${PN}-browser bjavascriptcore"

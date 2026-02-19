@@ -9,7 +9,7 @@ inherit deploy
 SRCDATE = "20251028"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/gbtrio4k-partitions-${SRCDATE}/partitions"
+S = "${UNPACKDIR}/gbtrio4k-partitions-${SRCDATE}/partitions"
 
 SRC_URI = "http://downloads.openpli.org/archive/gigablue/gbtrio4k-partitions-${SRCDATE}.zip"
 

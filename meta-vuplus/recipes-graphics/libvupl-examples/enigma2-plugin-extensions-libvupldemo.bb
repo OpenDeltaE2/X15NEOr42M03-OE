@@ -11,7 +11,7 @@ RDEPENDS:${PN} = "libvupl-example-cube"
 
 SRC_URI = "http://code.vuplus.com/download/release/support/enigma2-plugin-demoplugins-libvupldemo.${PR}.tar.gz"
 
-S = "${WORKDIR}/enigma2-plugin-demoplugins-libvupldemo"
+S = "${UNPACKDIR}/enigma2-plugin-demoplugins-libvupldemo"
 
 do_configure:prepend() {
 	sed -i "s/ps -e |/ps |/g" ${S}/plugin.py

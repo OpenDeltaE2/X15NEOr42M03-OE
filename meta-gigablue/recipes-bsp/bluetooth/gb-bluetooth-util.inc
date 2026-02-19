@@ -11,7 +11,7 @@ SRC_URI = " \
     http://downloads.openpli.org/archive/gigablue/gb-bluetooth-util-gb7252-${PR}.tar.gz \
 "
 
-S = "${WORKDIR}/gb-bluetooth-util-gb7252"
+S = "${UNPACKDIR}/gb-bluetooth-util-gb7252"
 
 do_package_qa() {
 }

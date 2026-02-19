@@ -15,7 +15,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
     install -d ${D}/boot
-    install -m 0755 ${WORKDIR}/vmlinuz-initrd-7439b0 ${D}/boot/initrd_run.bin
+    install -m 0755 ${UNPACKDIR}/vmlinuz-initrd-7439b0 ${D}/boot/initrd_run.bin
 }
 
 SRC_URI[md5sum] = "b6a51d92759880c892d700b67c3e3685"

@@ -14,7 +14,7 @@ SRC_URI = "http://downloads.openpli.org/archive/spycat/v${PV}.tar.gz \
 	file://rtl8723bs-add-4.11-support.patch \
 	"
 
-S = "${WORKDIR}/rtl8723bs-${PV}"
+S = "${UNPACKDIR}/rtl8723bs-${PV}"
 
 inherit module
 

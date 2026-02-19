@@ -9,7 +9,7 @@ RPROVIDES:${PN} += "kodiegl"
 
 SRC_URI = "http://downloads.openpli.org/archive/vuplus/KodiGLESPL_${MACHINE}_${PKGDATE}.tar.gz"
 
-S = "${WORKDIR}/KodiGLESPL_${MACHINE}"
+S = "${UNPACKDIR}/KodiGLESPL_${MACHINE}"
 
 do_install() {
 	install -d ${D}/usr/bin

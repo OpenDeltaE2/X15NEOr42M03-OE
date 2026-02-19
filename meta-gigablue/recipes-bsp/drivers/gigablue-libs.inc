@@ -19,7 +19,7 @@ FILES_SOLIBSDEV = ""
 
 SRC_URI = "http://downloads.openpli.org/archive/gigablue/${MACHINE}-hilib-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/hilib"
+S = "${UNPACKDIR}/hilib"
 
 
 # The driver is a set of binary libraries to install

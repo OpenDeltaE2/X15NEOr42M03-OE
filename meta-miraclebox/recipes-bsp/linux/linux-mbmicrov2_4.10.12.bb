@@ -11,7 +11,7 @@ SRC_URI[mips.sha256sum] = "54bd9694d08c98991174818d85189691d87530a67871938595e88
 SRC_URI[arm.md5sum] = "bda1c09ed92a805cedc6770c0dd40e81"
 SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5ea6964674a"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR:append = "oea4.1-r3"
 
@@ -42,8 +42,8 @@ SRC_URI:append:arm = " \
 SRC_URI:append:mipsel = " \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
-S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-${PV}"
+B = "${UNPACKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -85,7 +85,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image:arm = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_
 kernel_do_install:append:arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${UNPACKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image:arm () {

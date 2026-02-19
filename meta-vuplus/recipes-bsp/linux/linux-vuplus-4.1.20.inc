@@ -7,7 +7,7 @@ PR_INC = ".1"
 SRC_URI[md5sum] = "b3e5d84c2d1b16d191a7adfe96951b2f"
 SRC_URI[sha256sum] = "74648ddfe77e95e06ca3ab1b398ff26f7dd317767dbab3d27ebdd2b9d33bba51"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/linux-vuplus-${KV}:"
 
@@ -51,7 +51,7 @@ SRC_URI += "http://downloads.openpli.org/archive/vuplus/stblinux-${KSRC_VER}.tar
 
 inherit kernel machine_kernel_pr
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 
 export OS = "Linux"
 KERNEL_IMAGETYPE = "zImage"

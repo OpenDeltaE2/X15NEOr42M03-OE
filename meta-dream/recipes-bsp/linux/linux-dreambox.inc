@@ -108,7 +108,7 @@ do_configure:prepend() {
             -e '/CONFIG_LOGO_LINUX_CLUT224=/d' \
             -e '/CONFIG_LOCALVERSION/d' \
             -e '/CONFIG_LOCALVERSION_AUTO/d' \
-        < '${WORKDIR}/defconfig' >>'${S}/.config'
+        < '${UNPACKDIR}/defconfig' >>'${S}/.config'
 
         echo 'CONFIG_LOCALVERSION="-${MACHINE}"' >>${S}/.config
         echo '# CONFIG_LOCALVERSION_AUTO is not set' >>${S}/.config

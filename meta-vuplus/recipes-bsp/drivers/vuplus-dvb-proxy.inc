@@ -17,7 +17,7 @@ KERNEL_VERSION = "${@oe.utils.read_file('${STAGING_KERNEL_BUILDDIR}/kernel-abive
 do_install() {
         install -d ${D}/lib/modules/${KERNEL_VERSION}/extra
         for f in *.ko; do
-                install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KERNEL_VERSION}/extra/$f;
+                install -m 0644 ${UNPACKDIR}/$f ${D}/lib/modules/${KERNEL_VERSION}/extra/$f;
         done
 }
 

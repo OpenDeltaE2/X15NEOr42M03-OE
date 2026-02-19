@@ -10,7 +10,7 @@ MACHINE_KERNEL_PR:append = ".0"
 SRC_URI[md5sum] = "cb28a0056279ad46af776fd5cdbcf88f"
 SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f5a2e0e"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://downloads.openpli.org/archive/amiko/yh625tc-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
@@ -32,7 +32,7 @@ SRC_URI += "http://downloads.openpli.org/archive/amiko/yh625tc-linux-${PV}-base-
 
 inherit kernel machine_kernel_pr
 
-S = "${WORKDIR}/linux-${PV}-base"
+S = "${UNPACKDIR}/linux-${PV}-base"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

@@ -32,7 +32,7 @@ do_compile_kernelmodules:append() {
 kernel_do_install:append () {
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -m 0644 ${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-	install -m 0644 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+	install -m 0644 ${UNPACKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image () {

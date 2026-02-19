@@ -4,7 +4,7 @@ require nextv-initrd.inc
 
 do_install() {
     install -d ${D}/boot
-    install -m 0644 ${WORKDIR}/vmlinuz-initrd-et1x000 ${D}/boot/update.bin
+    install -m 0644 ${UNPACKDIR}/vmlinuz-initrd-et1x000 ${D}/boot/update.bin
 }
 
 SRC_URI[md5sum] = "d975108c96305a1b36374a2c2562119d"

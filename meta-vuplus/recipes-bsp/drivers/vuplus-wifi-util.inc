@@ -11,7 +11,7 @@ SRC_URI = " \
     http://downloads.openpli.org/archive/vuplus/vuplus-wifi-util-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
 "
 
-S = "${WORKDIR}/vuplus-wifi-util-${MACHINE}"
+S = "${UNPACKDIR}/vuplus-wifi-util-${MACHINE}"
 
 do_package_qa() {
 }

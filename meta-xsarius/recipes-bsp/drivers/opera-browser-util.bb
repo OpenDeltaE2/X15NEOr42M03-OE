@@ -34,11 +34,11 @@ python populate_packages:prepend () {
 }
 
 do_deploy() {
-    install -d -m 0755 ${WORKDIR}/deploy-ipk/mips32el
+    install -d -m 0755 ${UNPACKDIR}/deploy-ipk/mips32el
 
     for i in ${S}/${OPERA_BROWSER}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${WORKDIR}/deploy-ipk/mips32el;
+            install -m 0644 $i ${UNPACKDIR}/deploy-ipk/mips32el;
             install -m 0644 $i ${DEPLOY_DIR}/ipk/mips32el;
         fi
     done;

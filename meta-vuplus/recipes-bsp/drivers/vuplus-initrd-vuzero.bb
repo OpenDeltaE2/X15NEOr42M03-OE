@@ -2,7 +2,7 @@ require vuplus-initrd.inc
 
 do_install() {
 	install -d ${D}/boot
-        install -m 0755 ${WORKDIR}/vmlinuz-initrd-7362a0 ${D}/boot/initrd_cfe_auto.bin
+        install -m 0755 ${UNPACKDIR}/vmlinuz-initrd-7362a0 ${D}/boot/initrd_cfe_auto.bin
 }
 
 SRCDATE = "20141117"

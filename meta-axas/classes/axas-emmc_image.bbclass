@@ -53,19 +53,19 @@ IMAGE_CMD:axasemmc () {
     parted -s ${EMMC_IMAGE} unit KiB mkpart kernel4 ${FOURTH_KERNEL_PARTITION_OFFSET} $(expr ${FOURTH_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart rootfs4 ext4 ${FOURTH_ROOTFS_PARTITION_OFFSET} $(expr ${FOURTH_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart swap linux-swap ${SWAP_PARTITION_OFFSET} 100%
-    dd if=/dev/zero of=${WORKDIR}/boot.img bs=${BLOCK_SIZE} count=$(expr ${BOOT_PARTITION_SIZE} \* ${BLOCK_SECTOR})
-    mkfs.msdos -S 512 ${WORKDIR}/boot.img
-    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait'" > ${WORKDIR}/STARTUP
-    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait'" > ${WORKDIR}/STARTUP_BOOTSLOT_1_MODE_5
-    echo "boot emmcflash0.kernel2 'root=/dev/mmcblk0p5 rw rootwait'" > ${WORKDIR}/STARTUP_BOOTSLOT_2_MODE_5
-    echo "boot emmcflash0.kernel3 'root=/dev/mmcblk0p7 rw rootwait'" > ${WORKDIR}/STARTUP_BOOTSLOT_3_MODE_5
-    echo "boot emmcflash0.kernel4 'root=/dev/mmcblk0p9 rw rootwait'" > ${WORKDIR}/STARTUP_BOOTSLOT_4_MODE_5
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_1_MODE_5 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_2_MODE_5 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_3_MODE_5 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_4_MODE_5 ::
-    dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${BOOT_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
+    dd if=/dev/zero of=${UNPACKDIR}/boot.img bs=${BLOCK_SIZE} count=$(expr ${BOOT_PARTITION_SIZE} \* ${BLOCK_SECTOR})
+    mkfs.msdos -S 512 ${UNPACKDIR}/boot.img
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait'" > ${UNPACKDIR}/STARTUP
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait'" > ${UNPACKDIR}/STARTUP_BOOTSLOT_1_MODE_5
+    echo "boot emmcflash0.kernel2 'root=/dev/mmcblk0p5 rw rootwait'" > ${UNPACKDIR}/STARTUP_BOOTSLOT_2_MODE_5
+    echo "boot emmcflash0.kernel3 'root=/dev/mmcblk0p7 rw rootwait'" > ${UNPACKDIR}/STARTUP_BOOTSLOT_3_MODE_5
+    echo "boot emmcflash0.kernel4 'root=/dev/mmcblk0p9 rw rootwait'" > ${UNPACKDIR}/STARTUP_BOOTSLOT_4_MODE_5
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP ::
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP_BOOTSLOT_1_MODE_5 ::
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP_BOOTSLOT_2_MODE_5 ::
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP_BOOTSLOT_3_MODE_5 ::
+    mcopy -i ${UNPACKDIR}/boot.img -v ${UNPACKDIR}/STARTUP_BOOTSLOT_4_MODE_5 ::
+    dd conv=notrunc if=${UNPACKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${BOOT_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${KERNEL_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
 }
