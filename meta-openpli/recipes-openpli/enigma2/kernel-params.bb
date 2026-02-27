@@ -3,6 +3,8 @@ DESCRIPTION = "Tune kernel parameters in /etc/sysconf"
 
 require conf/license/openpli-gplv2.inc
 
+S = "${UNPACKDIR}"
+
 PACKAGES = "${PN}"
 
 SRC_URI = "file://sysctl.conf"
