@@ -1,3 +1,5 @@
+FILESEXTRAPATHSDIR:prepend := "${THISDIR}/${PN}:"
+
 SRC_URI += " \
 	file://chronyc.sh \
 "
