@@ -1,5 +1,0 @@
-DESCRIPTION = "Ciefp 28E,19E,13E,30W"
-
-SETTINGS_FILENAME = "ciefp-E2-4satA-28E-19E-13E-30W"
-
-include ciefp.inc
